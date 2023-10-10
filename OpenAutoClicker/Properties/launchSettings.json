@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenAutoClicker": {
+      "commandName": "Project",
+      "commandLineArgs": "5000 550 10"
+    }
+  }
+}
