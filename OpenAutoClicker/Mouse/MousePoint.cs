@@ -13,5 +13,15 @@ namespace OpenAutoClicker.Mouse
             X = x;
             Y = y;
         }
+
+        public static bool operator ==(MousePoint a, MousePoint b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator !=(MousePoint a, MousePoint b)
+        {
+            return !(a == b);
+        }
     }
 }

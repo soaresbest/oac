@@ -9,7 +9,11 @@ public class Script
         _logger = logger;
     }
 
-    public void Run(int startDelay, int delay, int? custom = null)
+    public void RunClick(
+        int startDelay,
+        int delay,
+        int? custom = null
+    )
     {
         _logger.Info($"waiting {startDelay}ms to start...");
 
@@ -47,6 +51,35 @@ public class Script
                 Thread.Sleep(delay);
 
                 Console.Write("-");
+            }
+        }
+    }
+
+    internal void RunHold(int startDelay)
+    {
+        _logger.Info($"waiting {startDelay}ms to start...");
+
+        Thread.Sleep(startDelay);
+
+        _logger.Info("holding");
+
+        MousePoint startMousePoint = MouseCommand.GetCursorPosition();
+
+        MouseCommand.LeftDown();
+
+        while (true)
+        {
+            Thread.Sleep(100);
+
+            MousePoint mousePoint = MouseCommand.GetCursorPosition();
+
+            if (startMousePoint != mousePoint)
+            {
+                MouseCommand.LeftUp();
+
+                _logger.Info("released");
+
+                break;
             }
         }
     }
