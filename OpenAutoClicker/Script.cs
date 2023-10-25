@@ -1,4 +1,5 @@
 ﻿using OpenAutoClicker.Mouse;
+using System.Diagnostics;
 
 public class Script
 {
@@ -55,11 +56,16 @@ public class Script
         }
     }
 
-    internal void RunHold(int startDelay)
+    internal void RunHold(
+        int startDelay,
+        int? stopDelay = null
+    )
     {
         _logger.Info($"waiting {startDelay}ms to start...");
 
         Thread.Sleep(startDelay);
+
+        Stopwatch stopwatch = Stopwatch.StartNew();
 
         _logger.Info("holding");
 
@@ -77,7 +83,16 @@ public class Script
             {
                 MouseCommand.LeftUp();
 
-                _logger.Info("released");
+                _logger.Info("released by mouse move");
+
+                break;
+            }
+
+            if (stopDelay.HasValue && stopwatch.ElapsedMilliseconds > stopDelay.Value)
+            {
+                MouseCommand.LeftUp();
+
+                _logger.Info("released by stop delay");
 
                 break;
             }

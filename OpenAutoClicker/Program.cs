@@ -67,14 +67,21 @@
             new ConsoleLogger()
         );
 
-        script.RunHold(startDelay);
+        if (args.Length == 3 && int.TryParse(args[2], out int stopDelay))
+        {
+            script.RunHold(startDelay, stopDelay);
+        }
+        else
+        {
+            script.RunHold(startDelay);
+        }
     }
 
     private static void PrintUsage()
     {
         Console.WriteLine(
             "usage: autoc click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code]\n" +
-            "             hold <time to start in miliseconds>"
+            "             hold <time to start in miliseconds> [time to stop in miliseconds]"
         );
     }
 }
