@@ -80,8 +80,8 @@
     private static void PrintUsage()
     {
         Console.WriteLine(
-            "usage: autoc click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code]\n" +
-            "             hold <time to start in miliseconds> [time to stop in miliseconds]"
+            "usage: oac click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code]\n" +
+            "           hold <time to start in miliseconds> [time to stop in miliseconds]"
         );
     }
 }
