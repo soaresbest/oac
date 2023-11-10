@@ -2,7 +2,7 @@
 {
     private static void Main(string[] args)
     {
-        if (args is null || args.Length < 2 || args.Length > 4)
+        if (args is null || args.Length < 2 || args.Length > 5)
         {
             PrintUsage();
 
@@ -42,7 +42,21 @@
             new ConsoleLogger()
         );
 
-        if (args.Length == 4 && int.TryParse(args[3], out int custom))
+        int custom;
+        int wheelsCustom;
+
+        if (
+            args.Length == 5 &&
+            int.TryParse(args[3], out custom) &&
+            int.TryParse(args[4], out wheelsCustom)
+        )
+        {
+            script.RunClick(startDelay, delay, custom, wheelsCustom);
+        }
+        else if (
+            args.Length == 4 &&
+            int.TryParse(args[3], out custom)
+        )
         {
             script.RunClick(startDelay, delay, custom);
         }
@@ -80,7 +94,7 @@
     private static void PrintUsage()
     {
         Console.WriteLine(
-            "usage: oac click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code]\n" +
+            "usage: oac click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code] [wheels count before run custom code]\n" +
             "           hold <time to start in miliseconds> [time to stop in miliseconds]"
         );
     }

@@ -13,7 +13,8 @@ public class Script
     public void RunClick(
         int startDelay,
         int delay,
-        int? custom = null
+        int? custom = null,
+        int? wheelsCustom = null
     )
     {
         _logger.Info($"waiting {startDelay}ms to start...");
@@ -23,6 +24,8 @@ public class Script
         _logger.Info("clicking");
 
         int clicks = 0;
+        int wheels = 0;
+        int slotCount = 1;
 
         while (true)
         {
@@ -38,20 +41,47 @@ public class Script
 
             if (custom.HasValue && clicks >= custom.Value)
             {
-                MouseCommand.WheelUp();
-                Thread.Sleep(500);
+                for (int i = 0; i < slotCount; i++)
+                {
+                    MouseCommand.WheelUp();
+                    Thread.Sleep(500);
+                }
+
                 MouseCommand.RightDown();
                 Thread.Sleep(5000);
                 MouseCommand.RightUp();
                 Thread.Sleep(500);
-                MouseCommand.WheelDown();
-                Thread.Sleep(500);
+
+                for (int i = 0; i < slotCount; i++)
+                {
+                    MouseCommand.WheelDown();
+                    Thread.Sleep(500);
+                }
 
                 clicks = 0;
 
+                if (wheels < int.MaxValue)
+                {
+                    wheels++;
+                }
+                else
+                {
+                    wheels = 0;
+                }
+
                 Thread.Sleep(delay);
 
-                Console.Write("-");
+                Console.Write($"-{wheels}-");
+
+                if (wheelsCustom.HasValue && (wheels % wheelsCustom.Value) == 0)
+                {
+                    slotCount++;
+
+                    if (slotCount == 9)
+                    {
+                        slotCount = 1;
+                    }
+                }
             }
         }
     }
