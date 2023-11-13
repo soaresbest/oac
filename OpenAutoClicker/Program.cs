@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-var rootCommand = new RootCommand("OAC - Open Auto Clicker by @soaresbest & @1bberto");
+var rootCommand = new RootCommand("OAC - Open Auto Clicker by @soaresbest");
 
 SetupClickCommand(rootCommand);
 
