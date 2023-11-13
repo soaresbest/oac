@@ -1,101 +1,61 @@
-﻿internal class Program
+﻿using System.CommandLine;
+
+var rootCommand = new RootCommand("OAC - Open Auto Clicker by @soaresbest");
+
+SetupClickCommand(rootCommand);
+
+SetupHoldCommand(rootCommand);
+
+await rootCommand.InvokeAsync(args);
+
+static void SetupClickCommand(RootCommand rootCommand)
 {
-    private static void Main(string[] args)
+    var clickCommand = new Command("click", "Sends a mouse click");
+
+    var startDelayOption = new Option<int>(new[] { "-s", "--start" }, "time to start in miliseconds") { IsRequired = true };
+
+    clickCommand.AddOption(startDelayOption);
+
+    var delayOption = new Option<int>(new[] { "-d", "--delay" }, "delay between clicks in miliseconds") { IsRequired = true };
+
+    clickCommand.AddOption(delayOption);
+
+    var customOption = new Option<int?>(new[] { "-c", "--click-count" }, () => null, "click count before run custom code") { IsRequired = false };
+
+    clickCommand.AddOption(customOption);
+
+    var wheelsCustomOption = new Option<int?>(new[] { "-w", "--wheels-count" }, () => null, "wheels count before run custom code") { IsRequired = false };
+
+    clickCommand.AddOption(wheelsCustomOption);
+
+    clickCommand.SetHandler((startDelay, delay, custom, wheelsCustom) =>
     {
-        if (args is null || args.Length < 2 || args.Length > 5)
-        {
-            PrintUsage();
+        var script = new Script(new ConsoleLogger());
 
-            return;
-        }
+        script.RunClick(startDelay, delay, custom, wheelsCustom);
+    }, startDelayOption, delayOption, customOption, wheelsCustomOption);
 
-        switch (args[0])
-        {
-            case "click":
-                RunClick(args);
-                return;
-            case "hold":
-                RunHold(args);
-                return;
-            default:
-                PrintUsage();
-                return;
-        }
-    }
+    rootCommand.Add(clickCommand);
+}
 
-    private static void RunClick(string[] args)
+static void SetupHoldCommand(RootCommand rootCommand)
+{
+    var holdCommand = new Command("hold", "Hold");
+
+    var startDelayOption = new Option<int>(new[] { "-s", "--start" }, "time to start in miliseconds") { IsRequired = true };
+
+    holdCommand.AddOption(startDelayOption);
+
+    var stopOption = new Option<int?>(new[] { "-t", "--stop" }, () => null, "time to stop in miliseconds") { IsRequired = false };
+
+    holdCommand.AddOption(stopOption);
+
+    holdCommand.SetHandler((startDelay, stopDelay) =>
     {
-        int startDelay;
-        int delay;
+        var script = new Script(new ConsoleLogger());
 
-        if (
-            !int.TryParse(args[1], out startDelay) ||
-            !int.TryParse(args[2], out delay)
-        )
-        {
-            PrintUsage();
+        script.RunHold(startDelay, stopDelay);
+    }, startDelayOption, stopOption);
 
-            return;
-        }
-
-        var script = new Script(
-            new ConsoleLogger()
-        );
-
-        int custom;
-        int wheelsCustom;
-
-        if (
-            args.Length == 5 &&
-            int.TryParse(args[3], out custom) &&
-            int.TryParse(args[4], out wheelsCustom)
-        )
-        {
-            script.RunClick(startDelay, delay, custom, wheelsCustom);
-        }
-        else if (
-            args.Length == 4 &&
-            int.TryParse(args[3], out custom)
-        )
-        {
-            script.RunClick(startDelay, delay, custom);
-        }
-        else
-        {
-            script.RunClick(startDelay, delay);
-        }
-    }
-
-    private static void RunHold(string[] args)
-    {
-        int startDelay;
-
-        if (!int.TryParse(args[1], out startDelay))
-        {
-            PrintUsage();
-
-            return;
-        }
-
-        var script = new Script(
-            new ConsoleLogger()
-        );
-
-        if (args.Length == 3 && int.TryParse(args[2], out int stopDelay))
-        {
-            script.RunHold(startDelay, stopDelay);
-        }
-        else
-        {
-            script.RunHold(startDelay);
-        }
-    }
-
-    private static void PrintUsage()
-    {
-        Console.WriteLine(
-            "usage: oac click <time to start in miliseconds> <delay between clicks in miliseconds> [click count before run custom code] [wheels count before run custom code]\n" +
-            "           hold <time to start in miliseconds> [time to stop in miliseconds]"
-        );
-    }
+    rootCommand.Add(holdCommand);
 }
