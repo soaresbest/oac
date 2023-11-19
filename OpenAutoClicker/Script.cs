@@ -88,10 +88,13 @@ public class Script
 
     internal void RunHold(
         int startDelay,
-        int? stopDelay = null
+        int? stopDelay = null,
+        int? wheelsCustom = null
     )
     {
         _logger.Info($"waiting {startDelay}ms to start...");
+
+        int wheels = 1;
 
         Thread.Sleep(startDelay);
 
@@ -118,13 +121,71 @@ public class Script
                 break;
             }
 
-            if (stopDelay.HasValue && stopwatch.ElapsedMilliseconds > stopDelay.Value)
+            if (
+                !wheelsCustom.HasValue &&
+                stopDelay.HasValue &&
+                stopwatch.ElapsedMilliseconds > stopDelay.Value
+            )
             {
                 MouseCommand.LeftUp();
 
                 _logger.Info("released by stop delay");
 
                 break;
+            }
+
+            if (
+                wheelsCustom.HasValue &&
+                stopDelay.HasValue &&
+                stopwatch.ElapsedMilliseconds > stopDelay.Value
+            )
+            {
+                MouseCommand.LeftUp();
+                Thread.Sleep(500);
+
+                if (wheels > wheelsCustom.Value)
+                {
+                    for (int i = 0; i < wheels; i++)
+                    {
+                        MouseCommand.WheelUp();
+                        Thread.Sleep(500);
+                    }
+
+                    MouseCommand.RightDown();
+                    Thread.Sleep(5000);
+                    MouseCommand.RightUp();
+                    Thread.Sleep(500);
+
+                    _logger.Info("released by wheel count");
+
+                    break;
+                }
+
+                _logger.Info(".", false);
+
+                for (int i = 0; i < wheels; i++)
+                {
+                    MouseCommand.WheelUp();
+                    Thread.Sleep(500);
+                }
+
+                wheels++;
+
+                MouseCommand.RightDown();
+                Thread.Sleep(5000);
+                MouseCommand.RightUp();
+                Thread.Sleep(500);
+
+                for (int i = 0; i < wheels; i++)
+                {
+                    MouseCommand.WheelDown();
+                    Thread.Sleep(500);
+                }
+
+                Thread.Sleep(500);
+                MouseCommand.LeftDown();
+
+                stopwatch = Stopwatch.StartNew();
             }
         }
     }

@@ -2,7 +2,7 @@
   "profiles": {
     "OpenAutoClicker": {
       "commandName": "Project",
-      "commandLineArgs": "click -s 500 -d 250"
+      "commandLineArgs": "hold -s 5000 -t 2000 -w 5"
     }
   }
 }

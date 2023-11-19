@@ -50,12 +50,16 @@ static void SetupHoldCommand(RootCommand rootCommand)
 
     holdCommand.AddOption(stopOption);
 
-    holdCommand.SetHandler((startDelay, stopDelay) =>
+    var wheelsCustomOption = new Option<int?>(new[] { "-w", "--wheels-count" }, () => null, "wheels count before run custom code") { IsRequired = false };
+
+    holdCommand.AddOption(wheelsCustomOption);
+
+    holdCommand.SetHandler((startDelay, stopDelay, wheelsCustom) =>
     {
         var script = new Script(new ConsoleLogger());
 
-        script.RunHold(startDelay, stopDelay);
-    }, startDelayOption, stopOption);
+        script.RunHold(startDelay, stopDelay, wheelsCustom);
+    }, startDelayOption, stopOption, wheelsCustomOption);
 
     rootCommand.Add(holdCommand);
 }
