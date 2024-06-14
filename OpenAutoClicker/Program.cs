@@ -20,6 +20,10 @@ static void SetupClickCommand(RootCommand rootCommand)
 
     clickCommand.AddOption(delayOption);
 
+    var rightButtonOption = new Option<bool>(new[] { "-rb", "--right-button" }, () => false, "is right mouse button") { IsRequired = false };
+
+    clickCommand.AddOption(rightButtonOption);
+
     var customOption = new Option<int?>(new[] { "-c", "--click-count" }, () => null, "click count before run custom code") { IsRequired = false };
 
     clickCommand.AddOption(customOption);
@@ -28,12 +32,12 @@ static void SetupClickCommand(RootCommand rootCommand)
 
     clickCommand.AddOption(wheelsCustomOption);
 
-    clickCommand.SetHandler((startDelay, delay, custom, wheelsCustom) =>
+    clickCommand.SetHandler((startDelay, delay, rightButton, custom, wheelsCustom) =>
     {
         var script = new Script(new ConsoleLogger());
 
-        script.RunClick(startDelay, delay, custom, wheelsCustom);
-    }, startDelayOption, delayOption, customOption, wheelsCustomOption);
+        script.RunClick(startDelay, delay, rightButton, custom, wheelsCustom);
+    }, startDelayOption, delayOption, rightButtonOption, customOption, wheelsCustomOption);
 
     rootCommand.Add(clickCommand);
 }

@@ -13,11 +13,12 @@ public class Script
     public void RunClick(
         int startDelay,
         int delay,
+        bool rightButton,
         int? custom = null,
         int? wheelsCustom = null
     )
     {
-        _logger.Info($"waiting {startDelay}ms to start...");
+        _logger.Info($"waiting {startDelay}ms to start... ({rightButton})");
 
         Thread.Sleep(startDelay);
 
@@ -29,9 +30,9 @@ public class Script
 
         while (true)
         {
-            MouseCommand.LeftDown();
+            MouseCommand.Down(rightButton);
             Thread.Sleep(100);
-            MouseCommand.LeftUp();
+            MouseCommand.Up(rightButton);
 
             clicks++;
 
@@ -47,9 +48,9 @@ public class Script
                     Thread.Sleep(500);
                 }
 
-                MouseCommand.RightDown();
+                MouseCommand.Down(rightButton);
                 Thread.Sleep(5000);
-                MouseCommand.RightUp();
+                MouseCommand.Up(rightButton);
                 Thread.Sleep(500);
 
                 for (int i = 0; i < slotCount; i++)

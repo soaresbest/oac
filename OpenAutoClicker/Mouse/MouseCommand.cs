@@ -103,6 +103,32 @@ namespace OpenAutoClicker.Mouse
              );
         }
 
+        public static void Down(bool rightButton)
+        {
+            MousePoint position = GetCursorPosition();
+
+            ImportedMouseEvent(
+                rightButton ? (int)MouseEventFlags.RightDown : (int)MouseEventFlags.LeftDown,
+                position.X,
+                position.Y,
+                0,
+                0
+             );
+        }
+
+        public static void Up(bool rightButton)
+        {
+            MousePoint position = GetCursorPosition();
+
+            ImportedMouseEvent(
+                rightButton ? (int)MouseEventFlags.RightUp : (int)MouseEventFlags.LeftUp,
+                position.X,
+                position.Y,
+                0,
+                0
+             );
+        }
+
         public static void Absolute(int x, int y)
         {
             ImportedMouseEvent(
