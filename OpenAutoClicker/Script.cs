@@ -15,14 +15,47 @@ public class Script
         int delay,
         bool rightButton,
         int? custom = null,
-        int? wheelsCustom = null
+        int? wheelsCustom = null,
+        int? flight = null
     )
     {
-        _logger.Info($"waiting {startDelay}ms to start... ({rightButton})");
+        _logger.Info($"waiting {startDelay}ms to start...");
 
         Thread.Sleep(startDelay);
 
         _logger.Info("clicking");
+
+        if (flight.HasValue)
+        {
+            int fireworks = 64;
+
+            for (int s = 0; s < flight.Value; s++)
+            {
+                int len = s == 0 ? fireworks - 1 : fireworks;
+
+                for (int i = 0; i < len; i++)
+                {
+                    MouseCommand.Down(rightButton);
+                    Thread.Sleep(100);
+                    MouseCommand.Up(rightButton);
+                    Thread.Sleep(i == len - 1 ? delay / 2 : delay);
+                }
+
+                if (s < flight.Value - 1)
+                {
+                    MouseCommand.WheelDown();
+                    Thread.Sleep(delay / 2);
+                }
+            }
+
+            for (int i = 0; i < 301; i++)
+            {
+                MouseCommand.MoveY(1);
+                Thread.Sleep(10);
+            }
+
+            return;
+        }
 
         int clicks = 0;
         int wheels = 0;
@@ -48,9 +81,9 @@ public class Script
                     Thread.Sleep(500);
                 }
 
-                MouseCommand.Down(rightButton);
+                MouseCommand.RightDown();
                 Thread.Sleep(5000);
-                MouseCommand.Up(rightButton);
+                MouseCommand.RightUp();
                 Thread.Sleep(500);
 
                 for (int i = 0; i < slotCount; i++)

@@ -32,12 +32,16 @@ static void SetupClickCommand(RootCommand rootCommand)
 
     clickCommand.AddOption(wheelsCustomOption);
 
-    clickCommand.SetHandler((startDelay, delay, rightButton, custom, wheelsCustom) =>
+    var flightOption = new Option<int?>(new[] { "-f", "--flight" }, () => null, "flight to up (custom code)") { IsRequired = false };
+
+    clickCommand.AddOption(flightOption);
+
+    clickCommand.SetHandler((startDelay, delay, rightButton, custom, wheelsCustom, flight) =>
     {
         var script = new Script(new ConsoleLogger());
 
-        script.RunClick(startDelay, delay, rightButton, custom, wheelsCustom);
-    }, startDelayOption, delayOption, rightButtonOption, customOption, wheelsCustomOption);
+        script.RunClick(startDelay, delay, rightButton, custom, wheelsCustom, flight);
+    }, startDelayOption, delayOption, rightButtonOption, customOption, wheelsCustomOption, flightOption);
 
     rootCommand.Add(clickCommand);
 }

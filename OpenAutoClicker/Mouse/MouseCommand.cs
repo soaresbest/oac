@@ -165,5 +165,27 @@ namespace OpenAutoClicker.Mouse
                 0
              );
         }
+
+        public static void MoveX(int amout)
+        {
+            ImportedMouseEvent(
+                (int)MouseEventFlags.Move,
+                amout,
+                0,
+                0,
+                0
+             );
+        }
+
+        public static void MoveY(int amout)
+        {
+            ImportedMouseEvent(
+                (int)MouseEventFlags.Move,
+                0,
+                amout,
+                0,
+                0
+             );
+        }
     }
 }
